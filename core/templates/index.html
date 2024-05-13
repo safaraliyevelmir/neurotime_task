@@ -45,18 +45,42 @@
                 </div>
             </div>
             <div class="col-3">
+                <!-- <div class="card">
+                    <div class="card-header">
+                        <h4>Read MP3</h4>
+                    </div>
+                    <div class="card-body">
+                        
+                        {% for audio_path in audio_files %}
+                        <audio src="{{ audio_path }}" controls>                        </audio>  
+                        {% endfor %}
+                            
+
+                            
+                    </div>
+                </div> -->
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Text</h4>
                     </div>
                     <div class="card-body">
-                        <textarea id="textContent" cols="30" rows="10">{{ text }}</textarea>
+                        <textarea class="form-control" id="textContent" cols="30" rows="10">{{ text }}</textarea>
                         <br>
+                    
+                        {% if is_posted %}
                         <a id="downloadLink" class="btn btn-primary" download="text.txt">Download as Text</a>
+
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>
-            <div class="col-3"></div>
         </div>
     </div>
 

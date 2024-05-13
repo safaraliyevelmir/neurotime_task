@@ -16,7 +16,7 @@ def main(request):
         transcriptions = [transcribe_audio(chunk) for chunk in chunks]
         text = process_transcription(transcriptions)
 
-        return render(request, 'index.html', {'text': text})
+        return render(request, 'index.html', {'text': text, 'is_posted': True, 'audio_files': chunks})
     return render(request, 'index.html', {'text': "trasncription will appear here"})
 
 def split_file(file_path):
@@ -25,7 +25,7 @@ def split_file(file_path):
 
     output_files = []
     for i, chunk in enumerate(chunks):
-        chunk_file = f"temp/chunk_{i}.mp3"
+        chunk_file = f"media/chunk_{i}.mp3"
         chunk.export(chunk_file, format="mp3")
         output_files.append(chunk_file)
     return output_files
