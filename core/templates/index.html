@@ -40,6 +40,7 @@
                             <input type="file" id="fileInput" name="file" class="form-control">
                             <br>
                             <button type="submit" id="uploadButton" class="btn btn-primary">Upload</button>
+                            <div id="loader" style="display:none;">Loading...</div>
                         </form>
                     </div>
                 </div>
@@ -75,7 +76,6 @@
                     
                         {% if is_posted %}
                         <a id="downloadLink" class="btn btn-primary" download="text.txt">Download as Text</a>
-
                         {% endif %}
                             
                     </div>
@@ -85,8 +85,12 @@
     </div>
 
     <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            var loader = document.getElementById('loader');
+            loader.style.display = 'block'; 
+        });
+    
         document.getElementById('downloadLink').addEventListener('click', function(e) {
-            // Prevent the default action of the link (opening a new page)
             e.preventDefault();
     
             // Get the content of the textarea

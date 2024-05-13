@@ -11,9 +11,11 @@ def main(request):
         fs = FileSystemStorage()
         file_name = fs.save('temp/' + str(uuid4()) + '.mp3', audio_file)
         file_path = fs.path(file_name)
-        
+        print("i am here")
         chunks = split_file(file_path)
+        print('i am here')
         transcriptions = [transcribe_audio(chunk) for chunk in chunks]
+        print("i am here")
         text = process_transcription(transcriptions)
 
         return render(request, 'index.html', {'text': text, 'is_posted': True, 'audio_files': chunks})

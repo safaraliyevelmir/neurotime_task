@@ -1,5 +1,0 @@
-prettify design
-add test sounds
-deployment
-check audio send to html for listening
-
