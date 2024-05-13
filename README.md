@@ -32,6 +32,6 @@ This project is used to automatically transcribe speech audio files. The audio f
 
 ## Sample Video
 
-[![Project Video]()](./tutorials/transcript.mp4)
+[![Project Video]()](https://youtu.be/yAZ4iAexAZ8?si=FWzrYQIHabqFaQ2J)
 
 
