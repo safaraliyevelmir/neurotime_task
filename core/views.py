@@ -4,6 +4,7 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from uuid import uuid4
 from config import settings
+import speech_recognition as sr
 
 def main(request):
     if request.method == 'POST' and request.FILES['file']:
@@ -11,35 +12,44 @@ def main(request):
         fs = FileSystemStorage()
         file_name = fs.save('temp/' + str(uuid4()) + '.mp3', audio_file)
         file_path = fs.path(file_name)
-        print("i am here")
+
         chunks = split_file(file_path)
-        print('i am here')
+
         transcriptions = [transcribe_audio(chunk) for chunk in chunks]
-        print("i am here")
+        print(transcriptions)
         text = process_transcription(transcriptions)
 
         return render(request, 'index.html', {'text': text, 'is_posted': True, 'audio_files': chunks})
-    return render(request, 'index.html', {'text': "trasncription will appear here"})
+    return render(request, 'index.html', {'text': "transcription will appear here"})
 
 def split_file(file_path):
-    audio = AudioSegment.from_file(file_path, format="mp3")
-    chunks = split_on_silence(audio, min_silence_len=100, silence_thresh=-40)
+    # Convert MP3 to WAV
+    audio = AudioSegment.from_mp3(file_path)
+    audio = audio.set_channels(1)  
+    audio = audio.set_frame_rate(16000)  
+    wav_path = file_path[:-4] + ".wav"  
+    audio.export(wav_path, format="wav")
+
+    audio = AudioSegment.from_wav(wav_path)
+    chunks = split_on_silence(audio, min_silence_len=1000, silence_thresh=-40)
 
     output_files = []
     for i, chunk in enumerate(chunks):
-        chunk_file = f"media/chunk_{i}.mp3"
-        chunk.export(chunk_file, format="mp3")
+        chunk_file = f"media/chunk_{i}.wav"
+        chunk.export(chunk_file, format="wav")
         output_files.append(chunk_file)
+    
     return output_files
 
-def transcribe_audio(file_path):
-    segments, info = settings.WISHPER_MODEL.transcribe(file_path)
-    return segments
+def transcribe_audio(chunk):
+    recognizer = settings.SPEECH_RECOGNIER
+    with sr.AudioFile(chunk) as source:
+        audio = recognizer.record(source)
+    text = recognizer.recognize_google(audio, language="en-US")
+    return text
 
 def process_transcription(transcription):
     text = ""
     for segment in transcription:
-        for sentence in segment:
-            text += sentence.text.strip() + " "
-        text += "\n"
+        text += segment.strip() + "\n"
     return text
